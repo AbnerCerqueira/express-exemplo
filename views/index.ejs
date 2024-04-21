@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <form>
+    <form action="/login" method="post">
         <h1>Login</h1>
 
         <label for="username">User</label>
@@ -17,6 +17,10 @@
 
         <label for="password">Senha</label>
         <input type="text" id="password" name="passwordInput" required>
+
+        <% if (error) { %>
+            Usuário ou senha não encontrados
+        <% } %>
 
         <button type="submit" style="margin-top:20px">Logar</button>
         <br>
