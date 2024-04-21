@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <form>
+    <form action="/cadastro" method="post">
         <h1>Cadastro</h1>
         <label for="username">User</label>
         <input type="text" id="username" name="usernameInput" autofocus required>
@@ -19,6 +19,10 @@
 
         <label for="passwordCheck">Confirma Senha</label>
         <input type="text" id="passwordCheck" name="passwordCheckInput" required>
+
+        <% if(error){ %>
+            Algo deu errado
+        <% } %>
 
         <button type="submit" style="margin-top:20px">Cadastrar</button>
         <br>

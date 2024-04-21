@@ -1,7 +1,15 @@
 const express = require('express')
+const session = require('express-session')
+const database = require('./database')
 const app = express()
 
 app.set("view engine", "ejs")
+app.use(express.urlencoded({extended: true}))
+app.use(session({
+    secret: 'me arrumem um emprego',
+    resave: false,
+    saveUninitialized: false
+}))
 
 // GET
 app.get("/", (req, res) => {
@@ -9,7 +17,10 @@ app.get("/", (req, res) => {
 })
 
 app.get("/cadastro", (req, res) => {
-    res.render("cadastro.ejs")
+    const error = req.query.error
+    res.render("cadastro.ejs", {
+        error
+    })
 })
 
 app.get("/sucess", (req, res) => {
@@ -22,6 +33,21 @@ app.get("/principal", (req, res) => {
 
 app.get("/atualiza", (req, res) => {
     res.render("atualiza.ejs")
+})
+
+// POST
+app.post("/cadastro", async (req, res) => {
+    const data = req.body
+    if (!data.usernameInput || !data.passwordInput){
+        res.redirect("/cadastro?error=empty")
+        return
+    }
+    if (data.passwordInput === data.passwordCheckInput){
+        await database.setData(data)
+        res.redirect("/sucess")
+        return
+    }
+    res.redirect("/cadastro?error=error")
 })
 
 //
