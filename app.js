@@ -13,16 +13,14 @@ app.use(session({
 
 // GET
 app.get("/", (req, res) => {
-    const error = req.query.error
     res.render("index.ejs", {
-        error
+        error: req.query.error
     })
 })
 
 app.get("/cadastro", (req, res) => {
-    const error = req.query.error
     res.render("cadastro.ejs", {
-        error
+        error: req.query.error
     })
 })
 
@@ -32,19 +30,23 @@ app.get("/sucess", (req, res) => {
 
 app.get("/principal", (req, res) => {
     if (!req.session.user) {
-        res.send("Você precisa fazer login para acessar essa página")
+        res.status(404).send("Você precisa fazer login para acessar essa página")
         return
     }
-    const user = {
-        username: req.session.user.username
-    }
     res.render("principal.ejs", {
-        user
+        username: req.session.user.username
     })
 })
 
 app.get("/atualiza", (req, res) => {
-    res.render("atualiza.ejs")
+    if (!req.session.user){
+        res.status(404).send("Você precisa estar logado pra atualizar algo")
+        return
+    }
+    res.render("atualiza.ejs", {
+        id: req.session.user.id,
+        username: req.session.user.username
+    })
 })
 
 // POST
@@ -79,6 +81,15 @@ app.post("/login", async (req, res) => {
 })
 
 // UPDATE
+app.post("/atualiza", async (req, res) => {
+    const data = {
+        username: req.body.usernameInput,
+        id: req.body.idInput
+    }
+    await database.updateData(data.username, data.id)
+    req.session.user.username = data.username
+    res.redirect("/principal")
+})
 
 // DELETE
 

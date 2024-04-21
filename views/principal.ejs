@@ -11,17 +11,19 @@
 <body>
     <div id="container">
         <h1>
-            Bem vindo <%= user.username %>
+            Bem vindo <%= username %>
         </h1>
 
         <form>
             <button type="submit">Deslogar</button>
         </form>
-        
+
         <form>
             <input type="hidden" name="idInput" value="">
             <button type="submit" style="margin-top: 20px">Apagar Conta</button>
         </form>
+        <br>
+        <a href="/atualiza">Mudar o username</a>
     </div>
 
 </body>

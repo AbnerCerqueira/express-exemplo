@@ -10,11 +10,11 @@
 
 <body>
     <form action="/atualiza" method="post">
-
+        <h1>Atualizar <%= username %></h1>
         <label for="username">User Novo</label>
         <input type="text" id="username" name="usernameInput" autofocus required>
         
-        <input type="hidden" name="idInput">
+        <input type="hidden" name="idInput" value="<%= id %>">
         <button type="submit" style="margin-top:20px">Atualizar</button>
     </form>
 
