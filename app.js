@@ -34,7 +34,8 @@ app.get("/principal", (req, res) => {
         return
     }
     res.render("principal.ejs", {
-        username: req.session.user.username
+        username: req.session.user.username,
+        id: req.session.user.id
     })
 })
 
@@ -92,10 +93,20 @@ app.post("/atualiza", async (req, res) => {
 })
 
 // DELETE
+app.post("/desloga", (req, res) => {
+    req.session.destroy()
+    res.redirect("/")
+})
+
+app.post("/delete", async (req, res) => {
+    await database.deleteData(req.body.idInput)
+    req.session.destroy()
+    res.redirect("/")
+})
 
 //
 app.use(express.static('static'))
 
 app.listen(port = 8080, () => {
-    console.log(`Iniciando servido na porta: ${port}`)
+    console.log(`Iniciando servido na porta ${port}`)
 })
