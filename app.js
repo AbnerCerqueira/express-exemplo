@@ -6,7 +6,7 @@ const app = express()
 app.set("view engine", "ejs")
 app.use(express.urlencoded({ extended: true }))
 app.use(session({
-    secret: 'me arrumem um emprego',
+    secret: 'me arrumem um emprego pelo amor de deus',
     resave: false,
     saveUninitialized: false
 }))
@@ -40,7 +40,7 @@ app.get("/principal", (req, res) => {
 })
 
 app.get("/atualiza", (req, res) => {
-    if (!req.session.user){
+    if (!req.session.user) {
         res.status(404).send("Você precisa estar logado pra atualizar algo")
         return
     }
@@ -58,37 +58,35 @@ app.post("/cadastro", async (req, res) => {
         res.redirect("/cadastro?error=empty")
         return
     }
-    if (data.passwordInput === data.passwordCheckInput) {
-        await database.setData(data)
-        res.redirect("/sucess")
+    if (data.passwordInput !== data.passwordCheckInput) {
+        res.redirect("/cadastro?error=error")
         return
     }
-    res.redirect("/cadastro?error=error")
+    await database.setData(data)
+    res.redirect("/sucess")
 })
 
 // READ
 app.post("/login", async (req, res) => {
     const data = req.body
-    const rows = await database.getData(data)
-    if (rows.length > 0) {
-        req.session.user = {
-            id: rows[0].id,
-            username: rows[0].username
-        }
-        res.redirect("/principal")
-        return
+    const [rows] = await database.getData(data)
+    if (!rows) {
+        res.redirect("/?error=error")
+        return;
     }
-    res.redirect("/?error=error")
+    req.session.user = {
+        id: rows.id,
+        username: rows.username
+    }
+    res.redirect("/principal")
 })
 
 // UPDATE
 app.post("/atualiza", async (req, res) => {
-    const data = {
-        username: req.body.usernameInput,
-        id: req.body.idInput
-    }
-    await database.updateData(data.username, data.id)
-    req.session.user.username = data.username
+    const username = req.body.usernameInput
+    const id = req.body.idInput
+    await database.updateData(username, id)
+    req.session.user.username = username
     res.redirect("/principal")
 })
 

@@ -11,33 +11,28 @@ const con = mysql.createConnection({
 
 async function setData(data) {
     let sql = "INSERT INTO User SET ?"
-
     let values = {
         username: data.usernameInput,
         password: data.passwordInput
     }
-
-    const [result] = await con.query(sql, values)
-    return result
+    const [rows] = await con.query(sql, values)
+    return rows
 }
-exports.setData = setData
 
 async function getData(args) {
     if (args) {
-        let sql = "SELECT * FROM User WHERE username = ? and password = ?"
+        let sql = "SELECT id, username FROM User WHERE username = ? and password = ?"
         let values = {
             username: args.usernameInput,
             password: args.passwordInput
         }
-        const [result] = await con.query(sql, [values.username, values.password])
-        return result
+        const [rows] = await con.query(sql, [values.username, values.password])
+        return rows
     }
-
     let sql = "SELECT * FROM User"
-    const [result] = await con.query(sql)
-    return result
+    const [rows] = await con.query(sql)
+    return rows
 }
-exports.getData = getData
 
 async function updateData(username, id){
     let sql = "UPDATE User SET ? WHERE id = ?"
@@ -46,10 +41,15 @@ async function updateData(username, id){
     }
     await con.query(sql, [values, id])
 }
-exports.updateData = updateData
 
 async function deleteData(id) {
     let sql = "DELETE FROM User WHERE id = ?"
-    const [result] = await con.query(sql, id)
+    const [rows] = await con.query(sql, id)
 }
-exports.deleteData = deleteData
+
+module.exports = {
+    setData,
+    getData,
+    updateData,
+    deleteData
+}
