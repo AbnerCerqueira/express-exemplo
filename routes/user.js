@@ -1,6 +1,7 @@
 const express = require('express')
 const userDao = require('../dao/user-dao')
 const router = express.Router()
+
 router.use((req, res, next) => {
     next()
 })
